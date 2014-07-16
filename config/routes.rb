@@ -2,8 +2,18 @@ Rails.application.routes.draw do
   devise_for :users
   resources :places
 
-  root 'places#index'
+  get "/oauth/connect", to: "oauth#connect"
+  get "/oauth/callback", to: "oauth#callback"
+  mount Commontator::Engine => '/commontator'
 
+  root 'places#index'
+  get "/about", to: "about#index"
+
+devise_scope :user do
+  get "users/sign_in", to: "devise/sessions#new"
+  post "users/sign_in", to: "devise/sessions#create"
+  get "users/sign_out", to: "devise/sessions#destroy"
+end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

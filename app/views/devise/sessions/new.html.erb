@@ -1,3 +1,7 @@
+<div id="copy-wrapper">
+
+<p><%= link_to "Sign in with Instagram", "/oauth/connect" %><p>
+
 <h2>Sign in</h2>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
@@ -15,3 +19,5 @@
 <% end %>
 
 <%= render "devise/shared/links" %>
+
+</div>

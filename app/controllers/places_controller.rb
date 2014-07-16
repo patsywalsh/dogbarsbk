@@ -5,14 +5,28 @@ class PlacesController < ApplicationController
   # GET /places
   # GET /places.json
   def index
-    @places = Place.all
-    @hash = Gmaps4rails.build_markers(@places) do |place, marker|
-      marker.lat place.latitude
-      marker.lng place.longitude
-      marker.infowindow place.name
-    end
+    # if !session[:access_token]
+    #   redirect_to Instagram.authorize_url(:redirect => 'http://localhost:3000')
+    # elsif response.access_token.present?
+      
+
+      @places = Place.all
+      puts @places
+      @hash = Gmaps4rails.build_markers(@places) do |place, marker|
+        marker.lat place.latitude
+        marker.lng place.longitude
+        marker.infowindow render_to_string(:partial => "places/infowindow", :locals => { :place => place})
+
+      end
   end
 
+  # def instagram_callback
+  #   return if session[:access_token]
+  #   response = Instagram.get_access_token(params[:code], :redirect_uri => CALLBACK_URL)
+  #   session[:access_token] = response.access_token
+  #   redirect_to places_path
+  # end
+  
   # GET /places/1
   # GET /places/1.json
   def show
@@ -20,11 +34,13 @@ class PlacesController < ApplicationController
     @hash = Gmaps4rails.build_markers(@places) do |place, marker|
       marker.lat place.latitude
       marker.lng place.longitude
-      marker.infowindow place.name
-    end
-    
+      marker.infowindow render_to_string(:partial => "places/infowindow", :locals => { :place => place})
 
-end
+    end
+    client = Instagram.client(:access_token => session[:access_token])
+    @results = client.media_search(@place.latitude, @place.longitude, :distance => 11)
+   
+  end
 
   # GET /places/new
   def new
@@ -42,7 +58,7 @@ end
 
     respond_to do |format|
       if @place.save
-        format.html { redirect_to @place, notice: 'Place was successfully created.' }
+        format.html { redirect_to @place } #, notice: 'Place was successfully created.' }
         format.json { render :show, status: :created, location: @place }
       else
         format.html { render :new }
@@ -56,7 +72,7 @@ end
   def update
     respond_to do |format|
       if @place.update(place_params)
-        format.html { redirect_to @place, notice: 'Place was successfully updated.' }
+        format.html { redirect_to @place } #, notice: 'Place was successfully updated.' }
         format.json { render :show, status: :ok, location: @place }
       else
         format.html { render :edit }
@@ -70,7 +86,7 @@ end
   def destroy
     @place.destroy
     respond_to do |format|
-      format.html { redirect_to places_url, notice: 'Place was successfully destroyed.' }
+      format.html { redirect_to places_url } #, notice: 'Place was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

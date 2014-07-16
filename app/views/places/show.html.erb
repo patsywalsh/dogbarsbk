@@ -3,6 +3,7 @@
 <div style='width: 100%;'>
   <div id="map" style='width: 100%; height: 200px;'></div>
 </div>
+
 <script type="text/javascript">
 handler = Gmaps.build('Google');
 handler.buildMap({ 
@@ -18,21 +19,35 @@ handler.buildMap({
   handler.getMap().setCenter(new google.maps.LatLng(<%= @place.latitude %>, <%= @place.longitude %>));
 });
 </script>
+<div id="instagramfeed">
+  <ul>
+    <% @results.take(5).each do |pic| %>
+      <% standard_resolution = pic["images"]['standard_resolution'] %>
+      <% image_url = standard_resolution['url'] %>
+      <% height = standard_resolution['height'] %>
+      <% width = standard_resolution['width'] %>
+        <li><%= image_tag image_url, height: height, width: width %></li>  
+    <% end %>
+  </ul>
+</div>
 
-<h3><%= @place.name %></h3>
-<p>	<%= @place.neighborhood %>
-	<%= @place.address %></p>
+<div id="copy-wrapper">
+  <div id="placeinfo">
+    <h2>  <%= @place.name %></h2>
+    <p class="address">   <%= @place.address %></p>
+    <p class="description">   <%= @place.description %></p>
+  </div> <!-- END PLACEINFO -->
+<!--  <p> <%= @place.latitude %> <%= @place.longitude %></p> -->
+<p class="add">listing not quite right? <%= link_to 'edit', edit_place_path(@place) %> | <%= link_to 'remove', @place, method: :delete, data: { confirm: 'Are you sure?' } %>  </p>
 
-<p><%= @place.description %></p>
+  <%= commontator_thread(@place) %>
 
 
 
+</div> <!-- END COPY WRAPPER DIV -->
 
-
-<p>
-  <strong>Rating:</strong>
-  <%= @place.rating %>
-</p>
-
-<%= link_to 'Edit', edit_place_path(@place) %> |
-<%= link_to 'Back to Home', places_path %>
+</div>
+<br />
+<!-- <%= link_to 'Edit', edit_place_path(@place) %> |
+<%= link_to 'Back to Home', places_path %> -->
+</div>

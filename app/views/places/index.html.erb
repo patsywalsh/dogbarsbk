@@ -21,8 +21,8 @@ handler.buildMap({
 
 
 
-<div>
-
+<!-- /// ITERATES THROUGH PLACES FOR LIST VIEW ///
+  <div> 
     <% @places.each do |place| %>
         <h3><%= link_to place.name, place %>, <%= place.rating %></h3>
         <p>	<%= place.neighborhood %>
@@ -36,5 +36,8 @@ handler.buildMap({
 </div>
 
 <br>
+-->
 
-<p>Know of a place that's not listed? <%= link_to 'Add a bar', new_place_path %></p>
+
+<p class="add">know of a place that's not listed? <%= link_to 'add a bar', new_place_path %></p>
+
